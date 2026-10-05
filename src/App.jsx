@@ -15,6 +15,18 @@ const testimonials = [
   { name: 'Dalia Al Awar', text: 'Full Upper Rehabilitation over Implant' }, { name: 'Joseph Saliba', text: 'Full mouth Implants Bone Graft Crowns' }, { name: 'Nahla Twak', text: 'Implant Bone Graft Crown Composite' },
 ];
 
+// Reviews are intentionally text-only. This keeps visual/sexual remarks out of the public review cards.
+const reviewExclusionPattern = /\b(?:photo|photos|picture|pictures|image|images|selfie|selfies|sexual|sex|sexy|nude|naked)\b/i;
+const isDisplayableReview = ({ text }) => typeof text === 'string' && text.trim().length > 0 && !reviewExclusionPattern.test(text);
+
+const locationImages = [
+  { filename: 'clinic-reception.png', alt: 'Smiley Land clinic reception in Zouk Mosbeh', caption: 'Reception', position: 'center' },
+  { filename: 'clinic-kids-room.png', alt: 'Smiley Land orthodontics and pediatric dentistry room', caption: 'Orthodontics & Pediatric Dentistry', position: 'center' },
+  { filename: 'clinic-treatment-room.png', alt: 'Smiley Land general dentistry treatment room', caption: 'General Dentistry', position: 'center 54%' },
+  { filename: 'clinic-endodontics.png', alt: 'Smiley Land endodontics treatment room', caption: 'Endodontics', position: 'center 56%' },
+  { filename: 'clinic-lead-doctor-office.png', alt: 'Smiley Land lead doctor office', caption: 'Lead doctor office', position: 'center 58%' },
+];
+
 const doctors = [
   { name: 'Dr Gaelle Daou', role: 'Pediatric dentist', image: clinicImage('dr-gaelle-daou.jpg'), position: 'center 25%' },
   { name: 'Nour Bou Saleh', role: 'Orthodontist', image: clinicImage('dr-nour-bou-saleh.png'), position: 'center 27%' },
@@ -28,12 +40,13 @@ function getCurrentPage() {
   return sitePages.includes(page) ? page : 'home';
 }
 
-function RouteLink({ page, children, className = '', onClick }) {
-  return <a className={className} href={`#/${page}`} onClick={onClick}>{children}</a>;
+function RouteLink({ page, children, className = '', onClick, ...props }) {
+  return <a {...props} className={className} href={`#/${page}`} onClick={onClick}>{children}</a>;
 }
 
-function Logo() {
-  return <RouteLink page="home" className="logo-link" aria-label="Smiley Land home"><img src={clinicImage('smiley-land-logo.png')} alt="Smiley Land Cosmetic and Dental Clinic" /></RouteLink>;
+function Logo({ footer = false }) {
+  const filename = footer ? 'smiley-land-logo-transparent.png' : 'smiley-land-logo.png';
+  return <RouteLink page="home" className={`logo-link${footer ? ' footer-logo-link' : ''}`} aria-label="Smiley Land home"><img src={clinicImage(filename)} alt="Smiley Land Cosmetic and Dental Clinic" /></RouteLink>;
 }
 
 function Header({ page }) {
@@ -55,14 +68,20 @@ function ServicesGrid() {
   </article>)}</div>;
 }
 
-function Testimonials() {
+function Testimonials({ showGoogleReviewLink = false }) {
+  const displayedTestimonials = testimonials.filter(isDisplayableReview);
   return <section className="testimonial-section"><div className="testimonial-heading">A 5 stars customer service <b>&amp; happy patients only</b></div><div className="testimonial-list">
-    {testimonials.map((testimonial) => <article className="testimonial-card" key={testimonial.name}><div className="lcd-badge"><span>LDC</span><small>LOUNGE DENTAL CLINIC</small></div><h3>{testimonial.name}</h3><p>{testimonial.text}</p></article>)}
+    {displayedTestimonials.map((testimonial) => <article className={`testimonial-card${showGoogleReviewLink ? ' testimonial-card--review' : ''}`} key={testimonial.name}>
+      {showGoogleReviewLink ? <a className="review-avatar" href={CLINIC_LOCATION.reviewLink} target="_blank" rel="noreferrer" aria-label={`Open ${testimonial.name}'s review on Google`}><img src={clinicImage('reviewer-avatar.png')} alt="" /></a> : <div className="lcd-badge"><span>LDC</span><small>LOUNGE DENTAL CLINIC</small></div>}
+      {showGoogleReviewLink && <span className="review-source">Patient review</span>}
+      <h3>{testimonial.name}</h3><p className={showGoogleReviewLink ? 'review-excerpt' : ''}>{testimonial.text}</p>
+      {showGoogleReviewLink && <a className="review-link" href={CLINIC_LOCATION.reviewLink} target="_blank" rel="noreferrer">Read on Google <span aria-hidden="true">↗</span></a>}
+    </article>)}
   </div></section>;
 }
 
 function SiteFooter() {
-  return <footer className="site-footer"><Logo /><div className="footer-menu"><RouteLink page="home">Home</RouteLink><RouteLink page="about">About us</RouteLink><RouteLink page="services">Services</RouteLink><RouteLink page="find">Find us</RouteLink><RouteLink page="contact">Get in touch</RouteLink></div><div className="footer-contact"><strong>GET IN<br />TOUCH</strong><span>☎ {CLINIC_LOCATION.phone}</span><span>✉ {CLINIC_LOCATION.email}</span><span>⌖ Kaslik, Lebanon</span></div></footer>;
+  return <footer className="site-footer"><Logo footer /><div className="footer-menu"><RouteLink page="home">Home</RouteLink><RouteLink page="about">About us</RouteLink><RouteLink page="services">Services</RouteLink><RouteLink page="find">Find us</RouteLink><RouteLink page="contact">Get in touch</RouteLink></div><div className="footer-contact"><strong>GET IN<br />TOUCH</strong><span>☎ {CLINIC_LOCATION.phone}</span><span>✉ {CLINIC_LOCATION.email}</span><span>⌖ {CLINIC_LOCATION.address}</span></div></footer>;
 }
 
 function PageShell({ children, page }) {
@@ -75,7 +94,7 @@ function HomePage() {
     <section className="clinic-intro block"><div><h1>SMILEY LAND CLINIC</h1><h2>A modern dental clinic offering complete care for every smile. Trusted treatments, advanced technology, and comfort in every visit.</h2><ul><li>Expert doctors, each highly specialized in their dental field, ensuring precise and dedicated care.</li><li>More than 25 years of experience delivering trusted treatments and consistent results.</li><li>Focus on fast recovery, comfort, and long-lasting dental health outcomes.</li><li>Use of advanced technology combined with premium-quality materials for reliable care.</li></ul></div><div className="clinic-visual"><span>SMILE<br />WITH<br />CONFIDENCE</span></div></section>
     <section className="what-we-do block"><h2>WHAT WE DO</h2><ServicesGrid /><RouteLink page="services" className="more-link">MORE <span>›</span></RouteLink></section>
     <section className="care-statement block"><h2>ADVANCED DENTAL CARE<br />AT ITS FINEST IN LEBANON</h2><p>From simple treatments to full smile transformations, we deliver dentistry built on precision, speed, and lasting quality. With expert specialists and modern technology, we make every visit efficient, comfortable, and focused on results you can trust.</p></section>
-    <Testimonials />
+    <Testimonials showGoogleReviewLink />
   </PageShell>;
 }
 
@@ -89,8 +108,8 @@ function ServicesPage() {
 
 function FindUsPage() {
   return <PageShell page="find">
-    <section className="find-page"><div className="find-page-inner block"><aside className="location-panel"><div className="location-tabs"><span>Dubai</span><span>Antelias</span><b>Kaslik</b></div><div className="location-details"><p><i>⌖</i><b>Smiley Land Cosmetic &amp; Dental Clinic</b><br />Kaslik, Jounieh, Mount Lebanon</p><p><i>☎</i><a href={`tel:${CLINIC_LOCATION.phone.replace(/[^+\d]/g, '')}`}>{CLINIC_LOCATION.phone}</a></p><p><i>✉</i><a href={`mailto:${CLINIC_LOCATION.email}`}>{CLINIC_LOCATION.email}</a></p><p><i>▣</i>{CLINIC_LOCATION.hours.map((item) => <span key={item}>{item}<br /></span>)}</p></div></aside><ClinicMap /></div></section>
-    <section className="location-images block"><h2>LOCATION IMAGES</h2><div className="location-image-grid"><figure><img src={clinicImage('clinic-reception.png')} alt="Smiley Land clinic reception in Kaslik" /><figcaption>Reception</figcaption></figure><figure><img src={clinicImage('clinic-kids-room.png')} alt="Smiley Land children's dental room" /><figcaption>Children's room</figcaption></figure><figure><img src={clinicImage('clinic-treatment-room.png')} alt="Smiley Land treatment room" /><figcaption>Treatment room</figcaption></figure></div></section>
+    <section className="find-page"><div className="find-page-inner block"><aside className="location-panel"><div className="location-tabs"><span>Dubai</span><span>Antelias</span><b>Zouk Mosbeh</b></div><div className="location-details"><p><i>⌖</i><b>Smiley Land Cosmetic &amp; Dental Clinic</b><br />Elite Medical Center, Zouk Mosbeh</p><p><i>☎</i><a href={`tel:${CLINIC_LOCATION.phone.replace(/[^+\d]/g, '')}`}>{CLINIC_LOCATION.phone}</a></p><p><i>✉</i><a href={`mailto:${CLINIC_LOCATION.email}`}>{CLINIC_LOCATION.email}</a></p><p><i>▣</i>{CLINIC_LOCATION.hours.map((item) => <span key={item}>{item}<br /></span>)}</p></div></aside><ClinicMap /></div></section>
+    <section className="location-images block"><h2>LOCATION IMAGES</h2><div className="location-image-grid">{locationImages.map((image) => <figure key={image.filename}><img src={clinicImage(image.filename)} alt={image.alt} style={{ objectPosition: image.position }} /><figcaption>{image.caption}</figcaption></figure>)}</div></section>
   </PageShell>;
 }
 
