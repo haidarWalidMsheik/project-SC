@@ -1,0 +1,74 @@
+/* Desktop and laptop navigation: retain the existing compact mobile menu. */
+@media (min-width: 1051px) {
+  .site-header {
+    height: 132px;
+  }
+
+  .logo-link {
+    width: 250px;
+  }
+
+  .main-nav {
+    gap: 36px;
+    font-size: 14px;
+  }
+
+  .main-nav > a:not(.appointment-nav) {
+    height: 40px;
+    padding-top: 12px;
+  }
+
+  .appointment-nav {
+    padding: 15px 23px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1050px) {
+  .site-header {
+    height: 104px;
+  }
+
+  .nav-wrap {
+    width: calc(100% - 52px);
+    gap: 24px;
+  }
+
+  .logo-link {
+    width: 210px;
+  }
+
+  .main-nav {
+    gap: 22px;
+    font-size: 12px;
+  }
+
+  .main-nav > a:not(.appointment-nav) {
+    height: 39px;
+    padding-top: 12px;
+  }
+
+  .appointment-nav {
+    padding: 14px 18px;
+    border-radius: 11px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 900px) {
+  .nav-wrap {
+    width: calc(100% - 40px);
+    gap: 16px;
+  }
+
+  .logo-link {
+    width: 182px;
+  }
+
+  .main-nav {
+    gap: 14px;
+    font-size: 11px;
+  }
+
+  .appointment-nav {
+    padding: 13px 16px;
+  }
+}

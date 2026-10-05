@@ -116,7 +116,7 @@ function FindUsPage() {
 function ContactPage() {
   return <PageShell page="contact">
     <section className="contact-page-intro"><div className="contact-copy"><p>VISIT US</p><h1>Care that starts<br />with a conversation.</h1><div className="contact-info"><h3>Smiley Land Cosmetic &amp; Dental Clinic</h3><p>Comprehensive Dental Care<br />Expert Team of Specialists<br />University Professors on Staff</p><a href={`tel:${CLINIC_LOCATION.phone.replace(/[^+\d]/g, '')}`}>Phone: {CLINIC_LOCATION.phone}</a><span>{CLINIC_LOCATION.address}</span></div></div><div className="appointment-photo"><div>BOOK AN APPOINTMENT</div></div></section>
-    <Testimonials />
+    <Testimonials showGoogleReviewLink />
   </PageShell>;
 }
 
