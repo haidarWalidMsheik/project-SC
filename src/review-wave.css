@@ -1,0 +1,55 @@
+/* A restrained in-card treatment for the text-only Google review cards. */
+.testimonial-section {
+  padding-bottom: clamp(38px, 4vw, 56px);
+}
+
+.testimonial-card--review {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 348px;
+  align-items: center;
+  overflow: hidden;
+  padding: 31px 35px 48px;
+}
+
+.testimonial-card--review::after {
+  position: absolute;
+  z-index: 0;
+  bottom: -42px;
+  left: -15%;
+  width: 130%;
+  height: 82px;
+  border-radius: 50% 50% 0 0 / 31px 31px 0 0;
+  background: rgba(24, 169, 191, 0.08);
+  content: '';
+  pointer-events: none;
+  transform: rotate(-1deg);
+}
+
+.testimonial-card--review > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep the avatar clean: the wave is inside the card, without an outer glow. */
+.review-avatar {
+  box-shadow: none;
+  transition: transform 0.2s ease;
+}
+
+.review-avatar:hover,
+.review-avatar:focus-visible {
+  box-shadow: none;
+}
+
+@media (max-width: 760px) {
+  .testimonial-section {
+    padding-bottom: 34px;
+  }
+
+  .testimonial-card--review {
+    min-height: 300px;
+    padding: 26px 20px 44px;
+  }
+}
