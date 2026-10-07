@@ -12,11 +12,13 @@ const services = [
 ];
 
 const testimonials = [
-  { name: 'Dalia Al Awar', text: 'Full Upper Rehabilitation over Implant' }, { name: 'Joseph Saliba', text: 'Full mouth Implants Bone Graft Crowns' }, { name: 'Nahla Twak', text: 'Implant Bone Graft Crown Composite' },
+  { id: 'nelly-abi-aoun', name: 'Nelly Abi aoun', rating: 5, text: 'The reviewer praised a warm welcome, compassionate care, and high-quality healthcare.' },
+  { id: 'emile-dagher', name: 'Emile Dagher', rating: 5, text: 'The reviewer praised professional, quick service and being seen at the appointment time.' },
+  { id: 'christelle-khraish', name: 'Christelle Khraish', rating: 2, text: 'The reviewer reported a long wait for an ultrasound appointment and incomplete blood testing.' },
 ];
 
 // Reviews are intentionally text-only. This keeps visual/sexual remarks out of the public review cards.
-const reviewExclusionPattern = /\b(?:photo|photos|picture|pictures|image|images|selfie|selfies|sexual|sex|sexy|nude|naked)\b/i;
+const reviewExclusionPattern = /\b(?:photo|photos|picture|pictures|image|images|selfie|selfies|sexual|sex|sexy|nude|naked)\b|صورة|صور|فوتو|جنسي|جنسية|مثير|عاري/i;
 const isDisplayableReview = ({ text }) => typeof text === 'string' && text.trim().length > 0 && !reviewExclusionPattern.test(text);
 
 const locationImages = [
@@ -69,11 +71,11 @@ function ServicesGrid() {
 }
 
 function Testimonials({ showGoogleReviewLink = false }) {
-  const displayedTestimonials = testimonials.filter(isDisplayableReview);
-  return <section className="testimonial-section"><div className="testimonial-heading">A 5 stars customer service <b>&amp; happy patients only</b></div><div className="testimonial-list">
-    {displayedTestimonials.map((testimonial) => <article className={`testimonial-card${showGoogleReviewLink ? ' testimonial-card--review' : ''}`} key={testimonial.name}>
+  const displayedTestimonials = testimonials.filter(isDisplayableReview).slice(0, 3);
+  return <section className="testimonial-section"><div className="testimonial-heading">Google <b>Reviews</b></div><div className="testimonial-list">
+    {displayedTestimonials.map((testimonial) => <article className={`testimonial-card${showGoogleReviewLink ? ' testimonial-card--review' : ''}`} key={testimonial.id}>
       {showGoogleReviewLink ? <a className="review-avatar" href={CLINIC_LOCATION.reviewLink} target="_blank" rel="noreferrer" aria-label={`Open ${testimonial.name}'s review on Google`}><img src={clinicImage('reviewer-avatar.png')} alt="" /></a> : <div className="lcd-badge"><span>LDC</span><small>LOUNGE DENTAL CLINIC</small></div>}
-      {showGoogleReviewLink && <span className="review-source">Patient review</span>}
+      {showGoogleReviewLink && <span className="review-source">Google review · {testimonial.rating} stars</span>}
       <h3>{testimonial.name}</h3><p className={showGoogleReviewLink ? 'review-excerpt' : ''}>{testimonial.text}</p>
       {showGoogleReviewLink && <a className="review-link" href={CLINIC_LOCATION.reviewLink} target="_blank" rel="noreferrer">Read on Google <span aria-hidden="true">↗</span></a>}
     </article>)}
