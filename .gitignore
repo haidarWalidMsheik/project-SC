@@ -3,3 +3,12 @@ dist/
 work/
 outputs/
 *.log
+
+# Keep future credentials and certificates out of the repository.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
