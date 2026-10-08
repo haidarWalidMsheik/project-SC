@@ -64,9 +64,9 @@ function Header({ page }) {
     </div></header>;
 }
 
-function ServicesGrid() {
+function ServicesGrid({ hideDecorativeMark = false }) {
   return <div className="services-grid">{services.map((service) => <article className={`service-tile ${service.className}`} key={service.title}>
-    <div className="service-overlay"><span className="tooth-mark" aria-hidden="true">♧</span><h3>{service.title}</h3>{service.description && <p>{service.description}</p>}</div>
+    <div className="service-overlay"><span className="tooth-mark" aria-hidden="true" style={hideDecorativeMark ? { visibility: 'hidden' } : undefined}>♧</span><h3>{service.title}</h3>{service.description && <p>{service.description}</p>}</div>
   </article>)}</div>;
 }
 
@@ -103,7 +103,7 @@ function HomePage() {
 function ServicesPage() {
   return <PageShell page="services">
     <section className="service-page-hero"><div className="service-page-copy"><h1>Our goal is to provide you with<br /><b>an excellent dental experience</b></h1><p>While helping you achieve optimal dental health. We believe that prevention is better than cure and that minimally invasive dentistry and surgery is the basis for service in our practice.</p></div></section>
-    <section className="what-we-do block services-page-grid"><h2>WHAT WE DO</h2><ServicesGrid /></section>
+    <section className="what-we-do block services-page-grid"><h2>WHAT WE DO</h2><ServicesGrid hideDecorativeMark /></section>
     <section className="service-steps block"><span>01</span><div><h2>Precision you can feel.</h2><p>Every smile plan combines careful diagnostics, contemporary materials and a team that keeps your comfort at the centre of the process.</p></div><RouteLink page="contact" className="blue-cta">Book your consultation</RouteLink></section>
   </PageShell>;
 }
